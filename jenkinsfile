@@ -5,6 +5,8 @@ pipeline {
     stage('Fetch dependencies') {
       
       steps {
+        sh 'yarn'
+        stash includes: 'node_modules/', name: 'node_modules'
         sh 'npm install'
       }
     }
