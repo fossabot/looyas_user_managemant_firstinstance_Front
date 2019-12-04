@@ -14,8 +14,8 @@ headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 providedIn: 'root'
 })
 export class AuthService {
-private loginUrl = 'http://localhost:8008/auth/signin';
-private signupUrl = 'http://localhost:8008/auth/signup';
+private loginUrl = 'http://localhost:8888/auth/signin';
+private signupUrl = 'http://localhost:8888/auth/signup';
 
 constructor(private http: HttpClient) {
   }
