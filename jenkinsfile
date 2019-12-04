@@ -1,0 +1,60 @@
+pipeline {
+  agent any
+  stages {
+   
+    stage('Fetch dependencies') {
+      
+      steps {
+        sh 'npm install'
+      }
+    }
+    stage('Build') {
+      steps {
+       
+        sh 'ng build --prod'
+      }
+    }
+    
+     stage('code review') {
+         steps {
+             script {
+              def scannerHome = tool 'sonar-scanner';
+             
+                   withSonarQubeEnv('sonar') {
+                       sh "${scannerHome}/bin/sonar-scanner"
+                }
+             }
+          }
+      }
+    stage('Kill old process'){
+            steps {
+                script {
+                    sh ''' 
+                 #!/bin/bash
+                 lsof -t -i :4401| xargs --no-run-if-empty kill -9
+                 '''
+                }
+            }
+        }
+     stage('deploy ') {
+      
+      steps {
+         script {
+           withEnv(['JENKINS_NODE_COOKIE=dontkillme']) {
+                    sh ''' 
+                 #!/bin/bash
+             
+                 nohup  ng serve --host 0.0.0.0 --port 4401 &
+
+                 '''
+           }
+            sh "sleep 20"
+                }
+                
+       
+      
+      }
+    }
+   
+  }
+}
