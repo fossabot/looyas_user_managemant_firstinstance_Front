@@ -14,6 +14,11 @@ import { SignupComponent } from './signup/signup.component';
 import { HomeComponent } from './home/home.component';
 import { httpInterceptorProviders } from './auth/auth-interceptor';
 import { NavbarComponent } from './navbar/navbar.component';
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { LayoutComponent } from './layout/layout.component';
+import { HeaderComponent } from './layout/header/header.component';
+import { FooterComponent } from './layout/footer/footer.component';
+import { NotFoundPageComponent } from './not-found-page/not-found-page.component';
 
 @NgModule({
   declarations: [
@@ -21,10 +26,16 @@ import { NavbarComponent } from './navbar/navbar.component';
     LoginComponent,
     SignupComponent,
     HomeComponent,
-    NavbarComponent
+    NavbarComponent,
+    LayoutComponent,
+    HeaderComponent,
+    FooterComponent,
+    NotFoundPageComponent
   ],
   imports: [
     BrowserModule,
+    AngularFontAwesomeModule,
+
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule.withConfig({warnOnNgModelWithFormControl: 'never'})   ,

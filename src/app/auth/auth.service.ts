@@ -16,6 +16,8 @@ providedIn: 'root'
 export class AuthService {
 private loginUrl = 'http://192.168.10.193:8888/auth/signin';
 private signupUrl = 'http://192.168.10.193:8888/auth/signup';
+//private loginUrl = 'http://localhost:8888/auth/signin';
+//private signupUrl = 'http://localhost:8888/auth/signup';
 
 constructor(private http: HttpClient) {
   }

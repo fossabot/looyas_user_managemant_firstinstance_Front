@@ -1,0 +1,23 @@
+
+  img {
+    width:150px;
+    border-radius: 60px;
+    height: auto;
+    margin-left: 40%;
+}
+button{
+    width:120px!important; 
+    height:40px !important;
+    margin-left: 40%;
+
+
+}
+p{
+    margin-left: 40%;
+
+}
+
+.login{
+    align-content: center;
+
+}

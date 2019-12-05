@@ -4,14 +4,15 @@ import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from '../auth/auth.service';
 import { TokenStorageService } from '../auth/token-storage.service';
 import { AuthLoginInfo } from '../auth/login-info';
- 
+import { Router, ActivatedRoute } from '@angular/router';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  form: any = {};
+   form: any = {};
   isLoggedIn = false;
   isLoginFailed = false;
   errorMessage = '';
@@ -19,7 +20,7 @@ export class LoginComponent implements OnInit {
   private loginInfo: AuthLoginInfo;
 
  
-  constructor(private authService: AuthService, private tokenStorage: TokenStorageService) {
+  constructor(private authService: AuthService, private tokenStorage: TokenStorageService,private router: Router) {
    
    }
  
@@ -47,8 +48,8 @@ export class LoginComponent implements OnInit {
         this.isLoginFailed = false;
         this.isLoggedIn = true;
         this.roles = this.tokenStorage.getAuthorities();
-      //  this.reloadPage();
-        console.log("success login")
+        console.log("success login");
+        this.router.navigate(['/home']);
       },
       error => {
         console.log(error);
@@ -58,6 +59,32 @@ export class LoginComponent implements OnInit {
     );
   }
  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
   reloadPage() {
     window.location.reload();
   }

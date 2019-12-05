@@ -1,13 +1,55 @@
-<div *ngIf="info.token; else loggedOut">
-    <h5 class="text-primary">Your Information</h5>
-    <p>
-      <strong>Username:</strong> {{info.username}}<br/>
-      <strong>Roles:</strong> {{info.authorities}}<br />
-      <strong>Token:</strong> {{info.token}}.
-    </p>
-    <button class="btn btn-secondary" (click)="logout()">Logout</button>
+
+<div class="row">
+    <div class="col-md-6 mx-auto my-5">
+      <section class="form-elegant">
+        <mdb-card>
+          <mdb-card-body class="mx-4">
+              <div class="text-center">
+              <h3 class="dark-grey-text mb-5">
+                <strong>Welcome</strong>
+              </h3>
+            </div>
+     
+          
+      
+         </mdb-card-body>    
+          <!--Footer-->
+          <div class="modal-footer mx-5 pt-3 mb-1">
+            
+                <ng-template #loggedOut>
+                              <p class="font-small grey-text d-flex justify-content-end">
+ Please<a class="nav-link"  class="blue-text ml-1" href="login">login!</a>
+                  </ng-template>
+          
+          </div>
+       
+          
+  
+          <div class=" login" *ngIf="info.token; else loggedOut">
+              <img alt src="../../assets/img/avatar.png" class="rounded-circle" />
+
+              <p>
+                <strong>Welcome </strong> {{info.username}}  
+                 </p>
+                 <p class="font-small grey-text d-flex justify-content-end">
+                   <a class="nav-link"  class="blue-text ml-1" (click)="logout()" >logout!</a>
+             
+            </div>
+        </mdb-card>
+  
+      </section>
+    </div>
   </div>
+  <!-- Default form login -->
+  
+
+       
+
    
-  <ng-template #loggedOut>
-    Please login. 
-  </ng-template>
+ 
+
+  
+         
+        
+  
+    
