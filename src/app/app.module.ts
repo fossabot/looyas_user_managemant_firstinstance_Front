@@ -13,12 +13,9 @@ import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { HomeComponent } from './home/home.component';
 import { httpInterceptorProviders } from './auth/auth-interceptor';
-import { NavbarComponent } from './navbar/navbar.component';
+import { NavbarComponent } from './layout/navbar/navbar.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { LayoutComponent } from './layout/layout.component';
-import { HeaderComponent } from './layout/header/header.component';
-import { FooterComponent } from './layout/footer/footer.component';
-import { NotFoundPageComponent } from './not-found-page/not-found-page.component';
 
 @NgModule({
   declarations: [
@@ -27,10 +24,7 @@ import { NotFoundPageComponent } from './not-found-page/not-found-page.component
     SignupComponent,
     HomeComponent,
     NavbarComponent,
-    LayoutComponent,
-    HeaderComponent,
-    FooterComponent,
-    NotFoundPageComponent
+    LayoutComponent
   ],
   imports: [
     BrowserModule,
