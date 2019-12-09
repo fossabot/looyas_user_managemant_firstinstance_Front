@@ -69,7 +69,7 @@ finally
             {
                 env.ForEmailPlugin = env.WORKSPACE
                 emailext body: '''${SCRIPT, template="groovy_html.template"}''',
-                        subject: "Jenkins : Failed Pipeline: ${currentBuild.fullDisplayName}",,
+                        subject: "Jenkins : Failed Pipeline: ${currentBuild.fullDisplayName}",
                         to: 'adam.issaoui@looyas.com'
             }
 }}
