@@ -1,80 +1,72 @@
 pipeline {
     agent any
-    try {
-        stages {
 
-            stage('Fetch dependencies') {
+    stages {
 
-                steps {
-                    sh 'npm install'
+        stage('Fetch dependencies') {
 
-                }
+            steps {
+                sh 'npm install'
+
             }
-            stage('Build') {
-                steps {
+        }
+        stage('Build') {
+            steps {
 
-                    sh 'ng build'
-                }
+                sh 'ng build'
             }
+        }
 
-            stage('code review') {
-                steps {
-                    script {
-                        def scannerHome = tool 'sonar-scanner';
+        stage('code review') {
+            steps {
+                script {
+                    def scannerHome = tool 'sonar-scanner';
 
-                        withSonarQubeEnv('sonar') {
-                            sh "${scannerHome}/bin/sonar-scanner"
-                        }
+                    withSonarQubeEnv('sonar') {
+                        sh "${scannerHome}/bin/sonar-scanner"
                     }
                 }
             }
-            stage('Kill old process'){
-                steps {
-                    script {
-                        sh ''' 
+        }
+        stage('Kill old process') {
+            steps {
+                script {
+                    sh ''' 
                  #!/bin/bash
                  lsof -t -i :4401| xargs --no-run-if-empty kill -9
                  '''
-                    }
                 }
             }
-            stage('deploy ') {
+        }
+        stage('deploy ') {
 
-                steps {
-                    script {
-                        withEnv(['JENKINS_NODE_COOKIE=dontkillme']) {
-                            sh ''' 
+            steps {
+                script {
+                    withEnv(['JENKINS_NODE_COOKIE=dontkillme']) {
+                        sh ''' 
                  #!/bin/bash
              
                  nohup  ng serve --host 0.0.0.0 --port 4401 &
 
                  '''
-                        }
-                        sh "sleep 20"
                     }
-
-
-
+                    sh "sleep 20"
                 }
-            }
 
+
+            }
+        }
+
+    }
+
+    post {
+        always {
+            env.ForEmailPlugin = env.WORKSPACE
+            emailext body: '''${SCRIPT, template="groovy_html.template"}''',
+                    subject: "Jenkins : Failed Pipeline: ${currentBuild.fullDisplayName}",
+                    to: 'adam.issaoui@looyas.com'
         }
     }
-    catch (all)
-    {
-        //Do something
-        throw err
-    }
-    finally
-    {
-        stage('Email_notifications')
-                {
-                    env.ForEmailPlugin = env.WORKSPACE
-                    emailext body: '''${SCRIPT, template="groovy_html.template"}''',
-                            subject: "Jenkins : Failed Pipeline: ${currentBuild.fullDisplayName}",
-                            to: 'adam.issaoui@looyas.com'
-                }
-    }
-
-}
+}  
+    
 
