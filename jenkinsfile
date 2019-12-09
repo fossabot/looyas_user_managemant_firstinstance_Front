@@ -1,6 +1,6 @@
 pipeline {
     agent any
-
+    env.ForEmailPlugin = env.WORKSPACE
     stages {
 
         stage('Fetch dependencies') {
@@ -61,7 +61,7 @@ pipeline {
 
     post {
         always {
-            env.ForEmailPlugin = env.WORKSPACE
+           
             emailext body: '''${SCRIPT, template="groovy_html.template"}''',
                     subject: "Jenkins : Failed Pipeline: ${currentBuild.fullDisplayName}",
                     to: 'adam.issaoui@looyas.com'
