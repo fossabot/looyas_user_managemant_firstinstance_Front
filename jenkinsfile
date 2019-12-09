@@ -58,4 +58,17 @@ pipeline {
     }
    
   }
+   post {
+    failure {
+       mail to: 'adam.issaoui@looyas.com',
+             subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
+             body: "Something is wrong with ${env.BUILD_URL}"
+    }
+   
+    success {
+       mail to: 'adam.issaoui@looyas.com',
+             subject: "success Pipeline: ${currentBuild.fullDisplayName}",
+             body: "Everything is OK with ${env.BUILD_URL}"
+    }
+  }
 }
