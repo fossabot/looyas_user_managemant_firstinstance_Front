@@ -60,7 +60,7 @@ pipeline {
   }
    post {
     failure {
-       mail to: 'nour.mhamdi@looyas.com',
+       mail to: 'adam.issaoui@looyas.com',
              subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
              body: "Something is wrong with ${env.BUILD_URL}"
     }
