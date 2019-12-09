@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    env.ForEmailPlugin = env.WORKSPACE
+    
     stages {
 
         stage('Fetch dependencies') {
