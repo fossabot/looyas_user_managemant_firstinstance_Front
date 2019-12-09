@@ -62,11 +62,11 @@ pipeline {
     failure {
        mail to: 'adam.issaoui@looyas.com',
              subject: "Jenkins : Failed Pipeline: ${currentBuild.fullDisplayName}",
-             body: " Build: ${build.result}
-                     Build URL: ${rooturl}${build.url}
-                     Project: 	${project.name}
-                     Date of build: ${it.timestampString}
-                     Build duration:	${build.durationString}"
+             body: " Build: ${build.result} "\n"
+                     Build URL: ${rooturl}${build.url} "\n"
+                     Project: 	${project.name} "\n"
+                     Date of build: ${it.timestampString} "\n"
+                     Build duration:	${build.durationString}" "\n"
     }
    
     success {
