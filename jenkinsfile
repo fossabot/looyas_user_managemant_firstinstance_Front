@@ -1,7 +1,8 @@
 pipeline {
     agent any
+    try {
     stages {
-try {
+
         stage('Fetch dependencies') {
 
             steps {
@@ -58,6 +59,7 @@ try {
         }
 
     }
+}
 catch (err)
 {
     //Do something
@@ -72,7 +74,7 @@ finally
                         subject: "Jenkins : Failed Pipeline: ${currentBuild.fullDisplayName}",
                         to: 'adam.issaoui@looyas.com'
             }
-}}
+}
 
 }
 
