@@ -1,8 +1,6 @@
 pipeline {
-    agent any
-    
-    stages {
-         
+    agent any  
+    stages {         
         stage('Clean Workspace') {
             steps {
                 cleanWs()
@@ -18,7 +16,6 @@ pipeline {
 
             steps {
                 sh 'npm install'
-
             }
         }
         stage('Build') {
@@ -27,7 +24,6 @@ pipeline {
                 sh 'ng build'
             }
         }
-
         stage('code review') {
             steps {
                 script {
@@ -63,11 +59,8 @@ pipeline {
                     }
                     sh "sleep 20"
                 }
-
-
             }
         }
-
     }
 
     post {
@@ -75,8 +68,7 @@ pipeline {
              
          emailext( to: 'adam.issaoui@looyas.com',
              subject: "Jenkins : ${currentBuild.fullDisplayName}",
-             body: '''${SCRIPT, template="managed:Groovy-Email-Template"}''' )
-    
+             body: '''${SCRIPT, template="managed:Groovy-Email-Template"}''' )   
         }
     }
 }  
