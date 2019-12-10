@@ -67,8 +67,7 @@ pipeline {
          emailext( to: 'adam.issaoui@looyas.com',
              subject: "Jenkins : ${currentBuild.fullDisplayName}",
              body: '''${SCRIPT, template="managed:Groovy-Email-Template"}''' )   
-        }
-        always {             
+                 
          emailext( to: 'adam.issaoui@looyas.com',
              subject: "SonarQube_Report: ${currentBuild.fullDisplayName}",
              body: '''${SCRIPT, template="managed:sonar-email-template"}''' )   
