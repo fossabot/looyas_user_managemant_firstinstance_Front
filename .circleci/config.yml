@@ -45,7 +45,10 @@ jobs:
             - v1-dependencies-
 
       - run: |
+           npm install tslint typescript --save-dev
            npm i sonar-scanner --save-dev
+           npm install tslint-sonarts –save-dev
+           npm install tslint-sonarts –save-dev
            npm run sonar-scanner
 
 
