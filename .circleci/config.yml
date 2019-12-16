@@ -44,7 +44,10 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run:  npm run sonar
+      - run: |
+           npm i sonar-scanner --save-dev
+           npm run sonar-scanner
+
 
 workflows:
   version: 2
