@@ -10,54 +10,122 @@ jobs:
       # documented at https://circleci.com/docs/2.0/circleci-images/
       # - image: circleci/mongo:3.4.4
 
-    working_directory: ~/repo
+    working_directory: ~/looyas_user_managemant_firstinstance_Front
 
     steps:
+      # Checkout the code from the branch into the working_directory
       - checkout
-
-
+      # Log the current branch
+      - run:
+          name: Show current branch
+          command: echo ${CIRCLE_BRANCH}
+      # Restore local dependencies from cache
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-{{ checksum "package-lock.json" }}
             - v1-dependencies-
-
-      - run: npm install
+      # Install project dependencies
+      - run:
+          name: Install local dependencies
+          command: npm install
+      # Cache local dependencies if they don't exist
       - save_cache:
+          key: v1-dependencies-{{ checksum "package-lock.json" }}
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-  code Review:
+  Lint Test:
     docker:
       # specify the version you desire here
       - image: circleci/node:12.13.1
 
-    working_directory: ~/repo
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/mongo:3.4.4
 
-    steps:
-      - checkout
+      working_directory: ~/looyas_user_managemant_firstinstance_Front
 
+      steps:
+        # Checkout the code from the branch into the working_directory
+        - checkout
+      # Lint the source code
+        - run:
+            name: Linting
+            command: npm run lint
+  unit Test:
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:12.13.1
 
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/mongo:3.4.4
 
-      - run: |
-           npm install tslint typescript --save-dev
-           npm i sonar-scanner --save-dev
-           npm install tslint-sonarts –save-dev
-           npm install tslint-sonarts –save-dev
-           npm run sonar-scanner
+      working_directory: ~/looyas_user_managemant_firstinstance_Front
 
+      steps:
+        # Checkout the code from the branch into the working_directory
+        - checkout
 
+      # Test the source code
+        - run:
+            name: Testing
+            command: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
+  End to end Test:
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:12.13.1
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/mongo:3.4.4
+
+      working_directory: ~/looyas_user_managemant_firstinstance_Front
+
+      steps:
+        # Checkout the code from the branch into the working_directory
+        - checkout
+      # End to End test
+        - run:
+            name: End to End Test
+            command: npm run e2e -- --protractor-config=e2e/protractor-ci.conf.js
+  deploy To Heroku:
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:12.13.1
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/mongo:3.4.4
+
+      working_directory: ~/looyas_user_managemant_firstinstance_Front
+
+      steps:
+        # Checkout the code from the branch into the working_directory
+        - checkout
+        - run: ng serve
 workflows:
   version: 2
   build-test-and-deploy-ANGULAR:
     jobs:
       - build
-      - code Review:
-          context: SonarCloud
+      - Lint Test:
           requires:
             - build
+      - unit Test:
+          requires:
+            - build
+      - End to end Test:
+          requires:
+            - build
+      - deploy To Heroku:
+          requires:
+            - Lint Test
+            - unit Test
+            - End to end Test
+
+
+
