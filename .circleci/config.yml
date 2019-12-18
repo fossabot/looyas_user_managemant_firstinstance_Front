@@ -62,16 +62,16 @@ jobs:
       # documented at https://circleci.com/docs/2.0/circleci-images/
       # - image: circleci/mongo:3.4.4
 
-      working_directory: ~/looyas_user_managemant_firstinstance_Front
+    working_directory: ~/looyas_user_managemant_firstinstance_Front
 
-      steps:
+    steps:
         # Checkout the code from the branch into the working_directory
-        - checkout
+      - checkout
 
       # Test the source code
-        - run:
-            name: Testing
-            command: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
+      - run:
+          name: Testing
+          command: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
   End to end Test:
     docker:
       # specify the version you desire here
@@ -82,9 +82,9 @@ jobs:
       # documented at https://circleci.com/docs/2.0/circleci-images/
       # - image: circleci/mongo:3.4.4
 
-      working_directory: ~/looyas_user_managemant_firstinstance_Front
+    working_directory: ~/looyas_user_managemant_firstinstance_Front
 
-      steps:
+    steps:
         # Checkout the code from the branch into the working_directory
         - checkout
       # End to End test
@@ -101,9 +101,9 @@ jobs:
       # documented at https://circleci.com/docs/2.0/circleci-images/
       # - image: circleci/mongo:3.4.4
 
-      working_directory: ~/looyas_user_managemant_firstinstance_Front
+    working_directory: ~/looyas_user_managemant_firstinstance_Front
 
-      steps:
+    steps:
         # Checkout the code from the branch into the working_directory
         - checkout
         - run: ng serve
