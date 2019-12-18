@@ -43,9 +43,9 @@ jobs:
       # documented at https://circleci.com/docs/2.0/circleci-images/
       # - image: circleci/mongo:3.4.4
 
-      working_directory: ~/looyas_user_managemant_firstinstance_Front
+    working_directory: ~/looyas_user_managemant_firstinstance_Front
 
-      steps:
+    steps:
         # Checkout the code from the branch into the working_directory
         - checkout
       # Lint the source code
