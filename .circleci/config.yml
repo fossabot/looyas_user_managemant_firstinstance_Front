@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/node:12.13.1
+      - image: circleci/node:10-browsers
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -37,7 +37,7 @@ jobs:
   Lint Test:
     docker:
       # specify the version you desire here
-      - image: circleci/node:12.13.1
+      - image: circleci/node:10-browsers
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -56,7 +56,7 @@ jobs:
   unit Test:
     docker:
       # specify the version you desire here
-      - image: circleci/node:12.13.1
+      - image: circleci/node:10-browsers
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -71,11 +71,11 @@ jobs:
       # Test the source code
       - run:
           name: Testing
-          command: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
+          command: npm run test
   End to end Test:
     docker:
       # specify the version you desire here
-      - image: circleci/node:12.13.1
+      - image: circleci/node:10-browsers
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -94,7 +94,7 @@ jobs:
   deploy To Heroku:
     docker:
       # specify the version you desire here
-      - image: circleci/node:12.13.1
+      - image: circleci/node:10-browsers
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
