@@ -1,134 +1,33 @@
-version: 2.1
+version: 2
 jobs:
   build:
-    docker:
-      # specify the version you desire here
-      - image: circleci/node:10-browsers
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
-
     working_directory: ~/looyas_user_managemant_firstinstance_Front
-
+    docker:
+      - image: circleci/node:6-browsers
     steps:
-      # Checkout the code from the branch into the working_directory
       - checkout
-      # Log the current branch
-      - run:
-          name: Show current branch
-          command: echo ${CIRCLE_BRANCH}
-      # Restore local dependencies from cache
       - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package-lock.json" }}
-            - v1-dependencies-
-      # Install project dependencies
+          key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
-          name: Install local dependencies
-          command: |
-            npm install
-      # Cache local dependencies if they don't exist
+          name: install-dependencies
+          command: yarn install
       - save_cache:
-          key: v1-dependencies-{{ checksum "package-lock.json" }}
+          key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
-            - node_modules
-  Lint Test:
-    docker:
-      # specify the version you desire here
-      - image: circleci/node:10-browsers
-    dependencies:
-      pre:
-        - npm install npm@latest -g # Should fix bug in ng test
-        - npm install angular-cli@latest -g
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
-
-    working_directory: ~/looyas_user_managemant_firstinstance_Front
-
-    steps:
-        # Checkout the code from the branch into the working_directory
-        - checkout
-      # Lint the source code
-        - run:
-            name: Linting
-            command: npm run lint
-  unit Test:
-    docker:
-      # specify the version you desire here
-      - image: circleci/node:10-browsers
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
-
-    working_directory: ~/looyas_user_managemant_firstinstance_Front
-
-    steps:
-        # Checkout the code from the branch into the working_directory
-      - checkout
-      # Test the source code
+            - ~/.cache/yarn
+            - ./node_modules
       - run:
-          name: Testing
-          command: npm run test
-  End to end Test:
-    docker:
-      # specify the version you desire here
-      - image: circleci/node:10-browsers
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
-
-    working_directory: ~/looyas_user_managemant_firstinstance_Front
-
-    steps:
-        # Checkout the code from the branch into the working_directory
-        - checkout
-      # End to End test
-        - run:
-            name: End to End Test
-            command: npm run e2e -- --protractor-config=e2e/protractor-ci.conf.js
-  deploy To Heroku:
-    docker:
-      # specify the version you desire here
-      - image: circleci/node:10-browsers
-
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
-
-    working_directory: ~/looyas_user_managemant_firstinstance_Front
-
-    steps:
-        # Checkout the code from the branch into the working_directory
-        - checkout
-        - run: ng serve
-workflows:
-  version: 2
-  build-test-and-deploy-ANGULAR:
-    jobs:
-      - build
-      - Lint Test:
-          requires:
-            - build
-      - unit Test:
-          requires:
-            - build
-      - End to end Test:
-          requires:
-            - build
-      - deploy To Heroku:
-          requires:
-            - Lint Test
-            - unit Test
-            - End to end Test
-
-
-
+          name: angular-build
+          command: yarn ng -- build --prod --aot --no-progress
+      - run:
+          name: angular-test
+          command: yarn test -- --single-run --no-progress
+      - store_artifacts:
+          path: test-results.xml
+          prefix: tests
+      - run:
+          name: angular-lint
+          command: yarn lint -- --formatters-dir ./tslint-formatters --format junit -o tslint.xml
+      - store_artifacts:
+          path: tslint.xml
+          prefix: lint
