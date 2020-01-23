@@ -1,0 +1,23 @@
+version: '3.6'
+services: # Here we define our service(s)
+  angular-web: # The name of the service
+    hostname: angular-web
+    container_name: angular_container  # Container name
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # Location of our Dockerfile
+    volumes:
+      - '.:/app'
+      - '/app/node_modules'
+    ports:
+      - '4200:4200'
+    networks:
+      - my_network_two
+
+    external_links:
+      - looyasback
+
+networks:
+  my_network_two:
+    external: true
