@@ -1,11 +1,11 @@
 pipeline {
     agent any
+
     environment{
 
      CONTAINER_FRONT_NAME ="starter_kit_front"
      CONTAINER_TAG = "latest"
      DOCKER_HUB_USER = "looyas"
-
     }
     stages {
         stage('Clean Workspace') {
@@ -109,11 +109,9 @@ pipeline {
                             }
             post {
                 always {
-
                     emailext(to: 'adam.issaoui@looyas.com',
                             subject: "Jenkins : Failed Pipeline: ${currentBuild.fullDisplayName}",
                             body: '''${SCRIPT, template="managed:Groovy-Email-Template"}''')
-
                 }
             }
         }
