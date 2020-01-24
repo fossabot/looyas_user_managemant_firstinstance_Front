@@ -15,7 +15,7 @@ pipeline {
         }
         stage('checkout') {
             steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/Looyas-Team/looyas_user_managemant_firstinstance_Front.git']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/Looyas/looyas_user_managemant_firstinstance_Front.git']]])
             }
         }
 
