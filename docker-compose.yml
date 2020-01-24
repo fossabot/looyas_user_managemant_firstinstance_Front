@@ -2,7 +2,8 @@ version: '3.6'
 services: # Here we define our service(s)
   angular-web: # The name of the service
     hostname: angular-web
-    container_name: starter_kit_front  # Container name
+    container_name: starter_kit_front # Container name
+    image: starter_kit_front
     build:
       context: .
       dockerfile: Dockerfile
