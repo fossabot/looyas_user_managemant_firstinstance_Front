@@ -1,6 +1,13 @@
 pipeline {
-    agent any  
-    stages {         
+    agent any
+    environment{
+
+     CONTAINER_FRONT_NAME ="starter_kit_front"
+     CONTAINER_TAG = "latest"
+     DOCKER_HUB_USER = "looyas"
+
+    }
+    stages {
         stage('Clean Workspace') {
             steps {
                 cleanWs()
@@ -11,7 +18,7 @@ pipeline {
                 checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/Looyas-Team/looyas_user_managemant_firstinstance_Front.git']]])
             }
         }
-      
+
         stage('Fetch dependencies') {
 
             steps {
@@ -35,40 +42,78 @@ pipeline {
                 }
             }
         }
-        stage('Kill old process') {
-            steps {
-                script {
-                    sh ''' 
-                 #!/bin/bash
-                 lsof -t -i :4401| xargs --no-run-if-empty kill -9
-                 '''
-                }
-            }
-        }
-        stage('deploy ') {
 
-            steps {
-                script {
-                    withEnv(['JENKINS_NODE_COOKIE=dontkillme']) {
-                        sh ''' 
-                 #!/bin/bash
-             
-                 nohup  ng serve --host 0.0.0.0 --port 4401 &
+          stage("Image Prune") {
+                    steps {
+                        script {
+                            try {
+                            sh '''
+                               #!/bin/bash
+                               docker stop $CONTAINER_BACK_NAME"
+                               '''
+                            sh '''
+                               #!/bin/bash
+                                 docker image prune -f '''
 
-                 '''
+                            } catch (error) {
+                            }
+                        }
                     }
-                    sh "sleep 20"
+
+                }
+                stage('Backend Image Build') {
+                    steps {
+                        script{
+                            sh '''
+                               #!/bin/bash
+                               docker-compose build
+                                '''
+                            sh '''
+                               #!/bin/bash
+                                sleep 20
+                                echo "Image build complete"
+                               '''
+                        }
+                    }
+                }
+                stage("Deploy") {
+                            parallel {
+                                        stage('Push to Docker Registry') {
+
+                                            steps {
+                                                script {
+                                                    withDockerRegistry(credentialsId: 'Docker_Hub', url: "") {
+                                                        sh "docker tag $CONTAINER_FRONT_NAME:$CONTAINER_TAG $DOCKER_HUB_USER/$CONTAINER_FRONT_NAME:$CONTAINER_TAG"
+                                                        sh "docker push $DOCKER_HUB_USER/$CONTAINER_FRONT_NAME:$CONTAINER_TAG"
+                                                    }
+                                                }
+
+                                            }
+                                        }
+
+                                        stage('Run Backend App') {
+                                            steps{
+                                                script{
+                                                    sh '''
+                                                       #!/bin/bash
+
+                                                       docker-compose down
+                                                       docker-compose up -d
+                                                       '''
+                                                    echo "Application backend started now"
+                                                }
+                                            }
+                                        }
+                                    }
+                               }
+                            }
+            post {
+                always {
+
+                    emailext(to: 'adam.issaoui@looyas.com',
+                            subject: "Jenkins : Failed Pipeline: ${currentBuild.fullDisplayName}",
+                            body: '''${SCRIPT, template="managed:Groovy-Email-Template"}''')
+
                 }
             }
         }
-    }
-    post {
-        always {             
-         emailext( to: 'adam.issaoui@looyas.com',
-             subject: "Jenkins : ${currentBuild.fullDisplayName}",
-             body: '''${SCRIPT, template="managed:Groovy-Email-Template"}''' )   
-     
-        }
-    }
-}  
-    
