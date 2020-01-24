@@ -1,4 +1,4 @@
-FROM node:12.2.0
+FROM node:12.13-alpine
 
 # install chrome for protractor tests
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
@@ -15,6 +15,7 @@ ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json /app/package.json
 RUN npm install
 RUN npm install -g @angular/cli@7.3.9
+RUN npm audit fix
 
 # add app
 COPY . /app
