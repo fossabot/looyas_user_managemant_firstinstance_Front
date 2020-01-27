@@ -73,7 +73,7 @@ pipeline {
                     }
 
                 }
-                stage('Backend Image Build') {
+                stage('FrontEnd Image Build') {
                     steps {
                         script{
                             sh '''
