@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment{
-
      CONTAINER_FRONT_NAME ="starter_kit_front"
      CONTAINER_TAG = "latest"
      DOCKER_HUB_USER = "looyas"
@@ -31,17 +30,30 @@ pipeline {
                 sh 'ng build'
             }
         }
-        stage('code review') {
-            steps {
-                script {
-                    def scannerHome = tool 'sonar-scanner';
+        stage('Analysis  & security tests') {
+           parallel {
+              stage('Code review') {
+                    steps {
+                        script {
+                            def scannerHome = tool 'sonar-scanner';
 
-                    withSonarQubeEnv('sonar') {
-                        sh "${scannerHome}/bin/sonar-scanner"
+                            withSonarQubeEnv('sonar') {
+                                sh "${scannerHome}/bin/sonar-scanner"
+                            }
+                        }
                     }
-                }
-            }
-        }
+                  }
+              stage('Security Test') {
+                                          steps {
+                                              script {
+                                                 sh '''
+                                                 #!/bin/bash
+                                                 snyk monitor
+                                                 ''' }
+                                                 }
+                                                  }
+                                                  }
+                                                  }
 
           stage("Image Prune") {
                     steps {
@@ -78,6 +90,16 @@ pipeline {
                 }
                 stage("Deploy") {
                             parallel {
+                                        stage('Container Security Test') {
+                                            steps {
+                                                 script {
+                                                        sh '''
+                                                             #!/bin/bash
+                                                              snyk monitor --docker $CONTAINER_FRONT_NAME
+                                                          '''
+                                                             }
+                                                   }
+                                         }
                                         stage('Push to Docker Registry') {
 
                                             steps {
